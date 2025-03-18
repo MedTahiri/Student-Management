@@ -17,13 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import hello_world
 from api.views import profiles
 from api.views import profile
+from api.views import notes
+from api.views import note
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/hello/',hello_world),
     path('api/profiles/',profiles),
-    path('api/profile',profile),
+    path('api/profile/',profile),
+    path('api/notes/',notes),
+    path('api/note/',note),
 ]
