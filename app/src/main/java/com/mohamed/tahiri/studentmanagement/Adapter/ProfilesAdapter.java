@@ -19,6 +19,8 @@ import com.mohamed.tahiri.studentmanagement.ProfileActivity;
 import com.mohamed.tahiri.studentmanagement.ProfilesActivity;
 import com.mohamed.tahiri.studentmanagement.R;
 import com.mohamed.tahiri.studentmanagement.Utils.ImageUtils;
+import com.mohamed.tahiri.studentmanagement.api.student.StudentAPI;
+import com.mohamed.tahiri.studentmanagement.api.student.StudentCallback;
 import com.mohamed.tahiri.studentmanagement.models.Student;
 
 import java.io.Serializable;
@@ -58,6 +60,22 @@ public class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHo
 
         });
 
+        holder.delete.setOnClickListener(v -> {
+            Student clickedStudent = data.get(position);
+            StudentAPI.deleteStudent(new StudentCallback() {
+                @Override
+                public void onSuccess() {
+                    Intent intent = new Intent(context, ProfilesActivity.class);
+                    context.startActivity(intent);
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(context,error,Toast.LENGTH_SHORT).show();
+                }
+            },clickedStudent);
+        });
+
     }
 
     @Override
@@ -68,6 +86,7 @@ public class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView firstname,lastname,classname;
         ImageView imageView;
+        ImageView delete;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -75,6 +94,7 @@ public class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHo
             lastname = itemView.findViewById(R.id.itemlastname);
             classname = itemView.findViewById(R.id.itemclass_name);
             imageView = itemView.findViewById(R.id.itemimage);
+            delete = itemView.findViewById(R.id.itemdelete);
         }
 
 

@@ -1,6 +1,5 @@
 package com.mohamed.tahiri.studentmanagement;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,21 +13,21 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.gson.Gson;
 import com.mohamed.tahiri.studentmanagement.Utils.ImageUtils;
 import com.mohamed.tahiri.studentmanagement.api.student.StudentAPI;
 import com.mohamed.tahiri.studentmanagement.api.student.StudentCallback;
+import com.mohamed.tahiri.studentmanagement.api.student.StudentsCallback;
 import com.mohamed.tahiri.studentmanagement.models.Student;
+import com.mohamed.tahiri.studentmanagement.models.createStudent;
 
 import java.util.List;
-import java.util.Objects;
-
-import com.mohamed.tahiri.studentmanagement.R;
 
 
 public class ProfileActivity extends AppCompatActivity {
@@ -37,6 +36,8 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView image;
 
     Button save;
+
+    Student studentIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +59,17 @@ public class ProfileActivity extends AppCompatActivity {
 
         save = (Button) findViewById(R.id.save);
 
-        Student studentIntent = (Student) getIntent().getSerializableExtra("student_data");
-        int nbStudent = getIntent().getIntExtra("nb_student",0);
+        Toolbar toolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setSubtitleTextColor(getResources().getColor(R.color.white));
+
+        toolbar.getOverflowIcon().setTint(getResources().getColor(R.color.white));
+
+        studentIntent = (Student) getIntent().getSerializableExtra("student_data");
 
         if (studentIntent != null) {
             firstname.setText(studentIntent.firstname);
@@ -75,27 +85,21 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (studentIntent==null){
 
-                    Student student = new Student(
-                            nbStudent+1,
+                    createStudent student = new createStudent(
                             firstname.getText().toString(),
                             lastname.getText().toString(),
                             image.toString(),
                             "email",
-                            "phone",
+                            phone.getText().toString(),
                             class_name.getText().toString(),
-                            remarque.getText().toString(),
-                            0
+                            remarque.getText().toString()
                     );
+                    Log.e("Create student : ",new Gson().toJson(student));
                     StudentAPI.createStudent(new StudentCallback() {
                     @Override
-                    public void onStudentsFetched(List<Student> students) {
-                        if (students.size()==nbStudent){
-                            Toast.makeText(ProfileActivity.this, "error student not created : students.size == "+ nbStudent, Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                    public void onSuccess() {
                             Intent intent = new Intent(ProfileActivity.this, ProfilesActivity.class);
                             startActivity(intent);
-                        }
                     }
 
                     @Override
@@ -114,12 +118,11 @@ public class ProfileActivity extends AppCompatActivity {
                             studentIntent.email,
                             studentIntent.phone,
                             class_name.getText().toString(),
-                            remarque.getText().toString(),
-                            studentIntent.note_id
+                            remarque.getText().toString()
                     );
                     StudentAPI.updateStudent(new StudentCallback() {
                         @Override
-                        public void onStudentsFetched(List<Student> students) {
+                        public void onSuccess() {
                                 Intent intent = new Intent(ProfileActivity.this, ProfilesActivity.class);
                                 startActivity(intent);
                         }
@@ -137,24 +140,31 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile_menu,menu);
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.profile_menu, menu);
+        return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_appel:
-                Intent i1 = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone.getText().toString()));
-                startActivity(i1);
-                return true;
-
-            case R.id.menu_notes:
-                Intent i2 = new Intent(this, NotesActivity.class);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_appel) {
+            Intent i1 = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone.getText().toString()));
+            startActivity(i1);
+            return true;
+        } else if (item.getItemId() == R.id.menu_notes) {
+            Intent i2 = new Intent(this, NotesActivity.class);
+            if (studentIntent!=null){
+                i2.putExtra("student_id",studentIntent.id);
                 startActivity(i2);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            }else {
+                Toast.makeText(this,"student not created !" , Toast.LENGTH_SHORT).show();
+            }
+
+            return true;
+        } else if (item.getItemId() == android.R.id.home){
+            onBackPressed();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 }

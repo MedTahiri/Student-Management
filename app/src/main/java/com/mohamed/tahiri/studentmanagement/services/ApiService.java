@@ -21,17 +21,7 @@ public class ApiService {
 
             connection.setRequestMethod(method);
 
-            if (method.equals("POST")){
-                String jsonData = new Gson().toJson(data);
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setDoOutput(true);
-
-                OutputStream outputStream = connection.getOutputStream();
-                outputStream.write(jsonData.getBytes("UTF-8"));
-                outputStream.close();
-            }
-
-            if (method.equals("PUT")){
+            if (method.equals("POST") || method.equals("PUT") || method.equals("DELETE")){
                 String jsonData = new Gson().toJson(data);
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setDoOutput(true);

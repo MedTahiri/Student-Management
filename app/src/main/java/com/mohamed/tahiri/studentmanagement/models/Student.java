@@ -11,9 +11,8 @@ public class Student implements Serializable {
     public String phone;
     public String class_name;
     public String remarque;
-    public int note_id;
 
-    public Student(int id, String firstname, String lastname, String image, String email, String phone, String class_name, String remarque, int note_id) {
+    public Student(int id, String firstname, String lastname, String image, String email, String phone, String class_name, String remarque) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -22,7 +21,6 @@ public class Student implements Serializable {
         this.phone = phone;
         this.class_name = class_name;
         this.remarque = remarque;
-        this.note_id = note_id;
     }
 
     public Student(){

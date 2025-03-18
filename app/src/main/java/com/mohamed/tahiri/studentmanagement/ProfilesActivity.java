@@ -11,22 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mohamed.tahiri.studentmanagement.Adapter.ProfilesAdapter;
 import com.mohamed.tahiri.studentmanagement.api.student.StudentAPI;
-import com.mohamed.tahiri.studentmanagement.api.student.StudentCallback;
+import com.mohamed.tahiri.studentmanagement.api.student.StudentsCallback;
 import com.mohamed.tahiri.studentmanagement.models.Student;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProfilesActivity extends AppCompatActivity {
 
+    RecyclerView recyclerView;
     int nbStudent;
 
     @Override
@@ -41,22 +39,31 @@ public class ProfilesActivity extends AppCompatActivity {
         });
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfilesActivity.this,ProfileActivity.class);
-                intent.putExtra("nb_student",nbStudent);
+                Intent intent = new Intent(ProfilesActivity.this, ProfileActivity.class);
+                intent.putExtra("nb_student", nbStudent);
                 startActivity(intent);
             }
         });
 
+        refreshStudents();
+    }
 
-        StudentAPI.getAllStudent(new StudentCallback() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshStudents();
+    }
+
+    private void refreshStudents() {
+        StudentAPI.getAllStudent(new StudentsCallback() {
             @Override
             public void onStudentsFetched(List<Student> students) {
-                ProfilesAdapter adapter = new ProfilesAdapter(students,ProfilesActivity.this);
+                ProfilesAdapter adapter = new ProfilesAdapter(students, ProfilesActivity.this);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ProfilesActivity.this));
                 recyclerView.setAdapter(adapter);
                 nbStudent = adapter.getItemCount();
@@ -67,7 +74,6 @@ public class ProfilesActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
+
 }
