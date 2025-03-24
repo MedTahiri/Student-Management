@@ -14,9 +14,9 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 public class StudentAPI {
-    private static final String API_URL_PROFILES = "http://10.11.0.135:8000/api/profiles/";
+    private static final String API_URL_PROFILES = "http://medtahiri.pythonanywhere.com/api/profiles/";
 
-    private static final String API_URL_PROFILE = "http://10.11.0.135:8000/api/profile/";
+    private static final String API_URL_PROFILE = "http://medtahiri.pythonanywhere.com/api/profile/";
 
     public static void getAllStudent(final StudentsCallback callback) {
         // Create a new Thread to run the network request

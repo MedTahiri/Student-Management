@@ -32,7 +32,7 @@ import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    EditText firstname ,lastname, class_name, remarque,phone;
+    EditText firstname ,lastname, class_name, remarque, phone, email;
     ImageView image;
 
     Button save;
@@ -56,6 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
         remarque = (EditText) findViewById(R.id.remarque);
         image = (ImageView) findViewById(R.id.image);
         phone = (EditText) findViewById(R.id.phone);
+        email = (EditText) findViewById(R.id.email);
 
         save = (Button) findViewById(R.id.save);
 
@@ -77,6 +78,7 @@ public class ProfileActivity extends AppCompatActivity {
             class_name.setText(studentIntent.class_name);
             remarque.setText(studentIntent.remarque);
             phone.setText(studentIntent.phone);
+            email.setText(studentIntent.email);
             ImageUtils.loadImageFromUrl(studentIntent.image, image);
         }
 
@@ -89,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity {
                             firstname.getText().toString(),
                             lastname.getText().toString(),
                             image.toString(),
-                            "email",
+                            email.getText().toString(),
                             phone.getText().toString(),
                             class_name.getText().toString(),
                             remarque.getText().toString()
@@ -115,8 +117,8 @@ public class ProfileActivity extends AppCompatActivity {
                             firstname.getText().toString(),
                             lastname.getText().toString(),
                             studentIntent.image,
-                            studentIntent.email,
-                            studentIntent.phone,
+                            email.getText().toString(),
+                            phone.getText().toString(),
                             class_name.getText().toString(),
                             remarque.getText().toString()
                     );
@@ -153,7 +155,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.menu_notes) {
             Intent i2 = new Intent(this, NotesActivity.class);
             if (studentIntent!=null){
-                i2.putExtra("student_id",studentIntent.id);
+                i2.putExtra("student_data",studentIntent);
                 startActivity(i2);
             }else {
                 Toast.makeText(this,"student not created !" , Toast.LENGTH_SHORT).show();
@@ -161,7 +163,8 @@ public class ProfileActivity extends AppCompatActivity {
 
             return true;
         } else if (item.getItemId() == android.R.id.home){
-            onBackPressed();
+            Intent intent = new Intent(ProfileActivity.this, ProfilesActivity.class);
+            startActivity(intent);
             return true;
         }
 

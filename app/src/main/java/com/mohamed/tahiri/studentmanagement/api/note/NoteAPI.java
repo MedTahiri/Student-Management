@@ -16,9 +16,9 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 public class NoteAPI {
-    private static final String API_URL_NOTES = "http://10.11.0.135:8000/api/notes/";
+    private static final String API_URL_NOTES = "http://medtahiri.pythonanywhere.com/api/notes/";
 
-    private static final String API_URL_NOTE = "http://10.11.0.135:8000/api/note/";
+    private static final String API_URL_NOTE = "http://medtahiri.pythonanywhere.com/api/note/";
 
     public static void getAllNote(final NotesCallback callback, int id){
         new Thread(new Runnable() {

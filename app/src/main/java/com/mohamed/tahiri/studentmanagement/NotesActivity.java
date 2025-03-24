@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
@@ -33,9 +34,13 @@ public class NotesActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
-    int student_id;
+    Student student_data;
+
+    TextView textView;
 
     Toolbar toolbar;
+
+    int nbNotes;
 
     FloatingActionButton floatingActionButton;
 
@@ -56,6 +61,8 @@ public class NotesActivity extends AppCompatActivity {
 
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
 
+        textView = (TextView) findViewById(R.id.textView);
+
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,15 +70,23 @@ public class NotesActivity extends AppCompatActivity {
 
         toolbar.setSubtitleTextColor(getResources().getColor(R.color.white));
 
-        student_id = getIntent().getIntExtra("student_id",-1);
+        student_data = (Student) getIntent().getSerializableExtra("student_data");
 
         refreshNotes();
+
+        if (nbNotes>0){
+            textView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }else {
+            textView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NotesActivity.this, NoteActivity.class);
-                intent.putExtra("student_id",student_id);
+                intent.putExtra("student_data",student_data);
                 startActivity(intent);
             }
         });
@@ -85,13 +100,23 @@ public class NotesActivity extends AppCompatActivity {
                 NotesAdapter adapter = new NotesAdapter(notes, NotesActivity.this);
                 recyclerView.setLayoutManager(new LinearLayoutManager(NotesActivity.this));
                 recyclerView.setAdapter(adapter);
+                nbNotes = adapter.getItemCount();
+                if (nbNotes>0){
+                    textView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }else {
+                    textView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onError(String errorMessage) {
-
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(errorMessage);
+                recyclerView.setVisibility(View.GONE);
             }
-        },student_id);
+        },student_data.id);
     }
 
     @Override
@@ -103,7 +128,9 @@ public class NotesActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
-            onBackPressed();
+            Intent intent = new Intent(NotesActivity.this, ProfileActivity.class);
+            intent.putExtra("student_data",student_data);
+            startActivity(intent);
             return true;
         }
 

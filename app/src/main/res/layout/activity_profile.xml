@@ -113,6 +113,24 @@
                     android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/classnameLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
             <!-- Phone -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/phoneLayout"
@@ -123,7 +141,7 @@
                 android:hint="Phone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/classnameLayout">
+                app:layout_constraintTop_toBottomOf="@+id/emailLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/phone"

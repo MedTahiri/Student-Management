@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.mohamed.tahiri.studentmanagement.api.note.NoteAPI;
 import com.mohamed.tahiri.studentmanagement.api.note.NoteCallback;
+import com.mohamed.tahiri.studentmanagement.models.Student;
 import com.mohamed.tahiri.studentmanagement.models.createNote;
 
 public class NoteActivity extends AppCompatActivity {
@@ -23,7 +24,7 @@ public class NoteActivity extends AppCompatActivity {
     EditText matier,score;
     Toolbar toolbar;
 
-    int id;
+    Student student_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class NoteActivity extends AppCompatActivity {
 
         toolbar.getNavigationIcon().setTint(getResources().getColor(android.R.color.white, getTheme()));
 
-        id = getIntent().getIntExtra("student_id",-1);
+        student_data = (Student) getIntent().getSerializableExtra("student_data");
 
     }
 
@@ -60,10 +61,13 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
-            onBackPressed();
+            Intent intent = new Intent(NoteActivity.this, NotesActivity.class);
+            intent.putExtra("student_data",student_data);
+            startActivity(intent);
             return true;
         } else if (item.getItemId()==R.id.save){
             createNote note = new createNote(
+                    student_data.id,
                     matier.getText().toString(),
                     score.getText().toString(),
                     Integer.parseInt(score.getText().toString())>=10
@@ -72,14 +76,15 @@ public class NoteActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess() {
                     Intent intent = new Intent(NoteActivity.this, NotesActivity.class);
+                    intent.putExtra("student_data",student_data);
                     startActivity(intent);
                 }
 
                 @Override
                 public void onError(String error) {
-                    Toast.makeText(NoteActivity.this, "error in create note", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NoteActivity.this, "error in create note " + student_data.id, Toast.LENGTH_SHORT).show();
                 }
-            },note,id);
+            },note,student_data.id);
             return true;
         }
 

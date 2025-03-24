@@ -24,8 +24,6 @@
         app:titleTextColor="@android:color/white" />
 
     <!-- RecyclerView -->
-
-    <!-- TextView for Empty State -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
@@ -43,6 +41,7 @@
         app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/item_note" />
 
+    <!-- TextView for Empty State -->
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

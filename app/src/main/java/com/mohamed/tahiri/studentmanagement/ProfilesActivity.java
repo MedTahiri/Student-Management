@@ -2,17 +2,21 @@ package com.mohamed.tahiri.studentmanagement;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.widget.TextView;
+
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mohamed.tahiri.studentmanagement.Adapter.ProfilesAdapter;
@@ -27,6 +31,10 @@ public class ProfilesActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     int nbStudent;
 
+    TextView textView;
+
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +48,18 @@ public class ProfilesActivity extends AppCompatActivity {
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        textView = (TextView) findViewById(R.id.textView);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setSubtitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setSubtitle(nbStudent +" students");
+
+        if (nbStudent>0){
+            textView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }else {
+            textView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,11 +87,21 @@ public class ProfilesActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(new LinearLayoutManager(ProfilesActivity.this));
                 recyclerView.setAdapter(adapter);
                 nbStudent = adapter.getItemCount();
+                toolbar.setSubtitle(nbStudent +" students");
+                if (nbStudent>0){
+                    textView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }else {
+                    textView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onError(String errorMessage) {
-
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(errorMessage);
+                recyclerView.setVisibility(View.GONE);
             }
         });
     }
